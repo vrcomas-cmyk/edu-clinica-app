@@ -1,8 +1,11 @@
-Revisa la carpeta "Inventario_Pendientes_Consumo-main" donde se suben diferentes archivos uno de ellos es Reporte consumo que se alimenta o complementa de un archivo adicional que es Resumen_Fac, estos son basicamente los clientes activos que tenemos.
-Complementa esto para fortalecer la logica de clientes y tener una base conjunta. Un mismo solicitante puede tener diferentes destinatarios y un cliente siemple va a pertencer a un ejecutivo y un grupo de cliente, todo esto añadelo.
-
-Quiero que ambas aplicacion convivan en una sola y se complemente, todo pasalo para que se conecte a supabase, la informacion que carge, tener un modulo especial para administrador donde pueda subir y editar la informacion.
-
-En el modulo debo de seleccionar que modulos van a ver cada uno.
-
-Cada usuario debe de poder ver solo sus propios registros, a excepcion de los gerentes, los gerentes pueden ver entre un usuario o varios
+src/components/portal/admin-portal-page.tsx(16,8): error TS2307: Cannot find module '@/lib/portal/upload' or its corresponding type declarations.
+src/components/portal/admin-portal-page.tsx(75,81): error TS7006: Parameter 'msg' implicitly has an 'any' type.
+src/components/portal/admin-portal-page.tsx(82,45): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/components/portal/admin-portal-page.tsx(83,48): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/components/portal/admin-portal-page.tsx(83,51): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/components/portal/admin-portal-page.tsx(200,49): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/components/portal/admin-portal-page.tsx(200,52): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/components/portal/admin-portal-page.tsx(220,52): error TS7006: Parameter 'ing' implicitly has an 'any' type.
+src/components/portal/admin-portal-page.tsx(220,57): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/components/portal/inventario-page.tsx(88,51): error TS2307: Cannot find module '@/lib/portal/invConfig' or its corresponding type declarations.
+Error: Command "npm run build" exited with 1
