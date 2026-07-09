@@ -60,6 +60,7 @@ export function InventarioPage() {
   const [size, setSize] = useState(100)
   const [adminMode, setAdminMode] = useState(false)
   const [hiddenRows, setHiddenRows] = useState<Set<string>>(new Set())
+  const [uploadSource, setUploadSource] = useState<'supabase' | 'apps-script' | ''>('')
 
   const [F, setF] = useState<any>({})
   const [invCodes, setInvCodes] = useState<string[]>([])
@@ -68,14 +69,33 @@ export function InventarioPage() {
 
   async function loadData() {
     setLoading(true)
+    setError('')
     try {
       if (!supabase) { setLoading(false); return }
+
+      // 1. Intentar cargar desde Supabase
       const { data: rows, error: err } = await supabase
         .from('inventario')
         .select('*')
         .limit(2000)
-      if (err) throw err
-      const data = rows || []
+
+      let data = rows || []
+
+      // 2. Si Supabase está vacío, intentar desde Apps Script
+      if (!data.length && !err) {
+        setUploadSource('apps-script')
+        try {
+          const { fetchWithCache } = await import('@/lib/portal/invConfig')
+          const appsData = await fetchWithCache()
+          if (appsData?.consolidado?.length) {
+            data = appsData.consolidado as any[]
+          }
+        } catch { /* Apps Script no disponible */ }
+      } else {
+        setUploadSource('supabase')
+      }
+
+      if (err && !data.length) throw err
       setRawData(data)
       if (data.length) {
         const fields = detectFields(data)
@@ -156,7 +176,15 @@ export function InventarioPage() {
       <motion.div variants={item} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-display font-bold">Inventario por Condición</h1>
-          <p className="text-muted-foreground text-sm mt-0.5">{fmt(filtered.length)} registros · {kpis.materiales} materiales</p>
+          <p className="text-muted-foreground text-sm mt-0.5">
+            {fmt(filtered.length)} registros · {kpis.materiales} materiales
+            {uploadSource === 'apps-script' && (
+              <Badge variant="outline" className="ml-2 text-[9px]">Apps Script</Badge>
+            )}
+            {uploadSource === 'supabase' && (
+              <Badge variant="secondary" className="ml-2 text-[9px]">Supabase</Badge>
+            )}
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant={adminMode ? 'default' : 'outline'} size="sm" className="text-xs gap-1.5" onClick={() => setAdminMode(!adminMode)}>
