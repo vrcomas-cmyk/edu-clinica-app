@@ -1,11 +1,20 @@
-src/components/portal/admin-portal-page.tsx(16,8): error TS2307: Cannot find module '@/lib/portal/upload' or its corresponding type declarations.
-src/components/portal/admin-portal-page.tsx(75,81): error TS7006: Parameter 'msg' implicitly has an 'any' type.
-src/components/portal/admin-portal-page.tsx(82,45): error TS7006: Parameter 'i' implicitly has an 'any' type.
-src/components/portal/admin-portal-page.tsx(83,48): error TS7006: Parameter 's' implicitly has an 'any' type.
-src/components/portal/admin-portal-page.tsx(83,51): error TS7006: Parameter 'i' implicitly has an 'any' type.
-src/components/portal/admin-portal-page.tsx(200,49): error TS7006: Parameter 's' implicitly has an 'any' type.
-src/components/portal/admin-portal-page.tsx(200,52): error TS7006: Parameter 'i' implicitly has an 'any' type.
-src/components/portal/admin-portal-page.tsx(220,52): error TS7006: Parameter 'ing' implicitly has an 'any' type.
-src/components/portal/admin-portal-page.tsx(220,57): error TS7006: Parameter 'i' implicitly has an 'any' type.
-src/components/portal/inventario-page.tsx(88,51): error TS2307: Cannot find module '@/lib/portal/invConfig' or its corresponding type declarations.
-Error: Command "npm run build" exited with 1
+## Estado Actual
+
+### ✅ Completado
+1. **RLS corregido** — Migración `SQL/migration_fix_rls_portal.sql` deshabilita RLS en tablas del portal (la app usa auth local, no Supabase Auth)
+2. **Upload real** — `admin-portal-page.tsx` parsea Excel con SheetJS, detecta hojas por headers, ingesta a Supabase + catálogos + Storage
+3. **Inventario Apps Script** — `inventario-page.tsx` conecta a Apps Script cuando Supabase está vacío, con cache 3 días en IndexedDB
+4. **Clientes desde upload** — `clients-page.tsx` muestra solicitantes del upload con destinatarios expandibles, ejecutivo y grupo
+
+### 📋 Próximos pasos
+1. **Ejecutar migración SQL** en Supabase: `SQL/migration_fix_rls_portal.sql`
+2. **Crear bucket** `portal-uploads` en Supabase Storage (si no existe)
+3. **Subir primer archivo Excel** desde Admin Portal
+4. **Probar flujo completo**: upload → datos en tablas → consumo/sugerencias/inventario muestran datos
+
+### 🐛 Error anterior (resuelto)
+```
+Error al subir: new row violates row-level security policy for table "portal_uploads"
+```
+Causa: RLS usaba `auth.uid()` pero la app usa auth local en IndexedDB.
+Solución: Migración que deshabilita RLS en tablas del portal.

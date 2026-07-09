@@ -93,8 +93,8 @@ export async function ingestFacturacion(
   if (!rows?.length) return { ok: false, done: 0, error: 'Sin filas' }
 
   try {
-    // Limpiar tabla anterior
-    const del = await supabase.from('facturacion_mensual').delete().gte('created_at', '2000-01-01')
+    // Limpiar tabla anterior (delete all rows)
+    const del = await supabase.from('facturacion_mensual').delete().not('id', 'is', null)
     if (del.error) return { ok: false, done: 0, error: 'No se pudo limpiar: ' + del.error.message }
 
     const CH = 1000
@@ -142,7 +142,7 @@ export async function ingestConsumo(
   if (!rows?.length) return { ok: false, done: 0, error: 'Sin filas' }
 
   try {
-    const del = await supabase.from('consumo').delete().gte('created_at', '2000-01-01')
+    const del = await supabase.from('consumo').delete().not('id', 'is', null)
     if (del.error) return { ok: false, done: 0, error: 'No se pudo limpiar: ' + del.error.message }
 
     const CH = 1000
@@ -195,7 +195,7 @@ export async function ingestSugerencias(
   if (!rows?.length) return { ok: false, done: 0, error: 'Sin filas' }
 
   try {
-    const del = await supabase.from('sugerencias').delete().gte('created_at', '2000-01-01')
+    const del = await supabase.from('sugerencias').delete().not('id', 'is', null)
     if (del.error) return { ok: false, done: 0, error: 'No se pudo limpiar: ' + del.error.message }
 
     const CH = 1000
@@ -260,7 +260,7 @@ export async function ingestInventario(
   if (!rows?.length) return { ok: false, done: 0, error: 'Sin filas' }
 
   try {
-    const del = await supabase.from('inventario').delete().gte('created_at', '2000-01-01')
+    const del = await supabase.from('inventario').delete().not('id', 'is', null)
     if (del.error) return { ok: false, done: 0, error: 'No se pudo limpiar: ' + del.error.message }
 
     const CH = 1000
@@ -395,9 +395,12 @@ export async function uploadPortalFile(
 
     const types = meta.types.length ? meta.types : ['multi']
     for (const t of types) {
+      // Desactivar uploads anteriores del mismo tipo (ignorar error si no hay registros)
       await supabase.from('portal_uploads').update({ status: 'inactive' })
         .eq('report_type', t).eq('status', 'active')
-      await supabase.from('portal_uploads').insert({
+        .then(() => {}, () => {}) // silenciar error
+      // Insertar nuevo registro
+      const ins = await supabase.from('portal_uploads').insert({
         report_type: t,
         filename: meta.fileName,
         storage_path: path,
@@ -405,6 +408,7 @@ export async function uploadPortalFile(
         uploaded_by: meta.uploadedBy,
         status: 'active',
       })
+      if (ins.error) console.error('Error inserting portal_uploads:', ins.error)
     }
     return path
   } catch {

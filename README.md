@@ -6,17 +6,17 @@ PWA CRM para gestión de equipo de educación clínica y promotoría.
 
 - **Offline-First**: Funciona sin conexión con Dexie.js (IndexedDB)
 - **Sincronización**: Sincronización automática con Supabase
-- **Google Workspace**: Integración con Calendar, Drive y Sheets.
+- **Google Workspace**: Integración con Calendar, Drive y Sheets
 - **Geolocalización**: Check-in/out con ubicación
-- **Evidencias**: Fotos, PDFs, videos, documentos
-- **Reportes**: Dashboards y gráficas interactivas
+- **Evidencias**: Fotos, PDFs, videos, documentos.
+- **Reportes**: Dashboards y gráficas interactivas.
 - **Responsive**: Optimizado para móvil, tablet y desktop.
-- **PWA**: Instalable como aplicación nativa.
+- **PWA**: Instalable como aplicación nativa
 
-## Tecnologías.
-.
-- React 18 + TypeScript.
-- Vite.
+## Tecnologías
+
+- React 18 + TypeScript
+- Vite
 - Tailwind CSS + shadcn/ui
 - Supabase (PostgreSQL + Auth + Storage)
 - Dexie.js (IndexedDB)
